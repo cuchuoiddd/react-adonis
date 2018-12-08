@@ -9,7 +9,7 @@ export default class NameForm extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { user: []};
+        this.state = { user: [] };
     }
 
     handleChange = (key) => {
@@ -38,51 +38,28 @@ export default class NameForm extends React.Component {
         }
         axios.post(`http://localhost:3333/tests`, { data })
             .then(res => {
-                console.log(res);
-                console.log(res.data, 'asdsadasda');
-                // const item = res.data;
-                // this.setState({item:item})
+                this.setState(prev => (this.state.user.push(res.data)))
             })
-        this.setState(prev => (this.state.user.push(data)))
-
-        // this.setState({item:data})
         event.preventDefault();
     }
     componentDidMount() {
         axios.get(`http://localhost:3333/tests`)
             .then(res => {
-                // console.log(res,'tabve');
-
                 const user = res.data;
                 this.setState({ user });
-
             })
 
     }
 
 
-
-
-    // onChange  = event => {
-    //     this.setState({ id: event.target.value });
-    //   }
     onDelete = (id) => {
-        // console.log('state: ',this.state.id);
-        // console.log('refs: ',this.refs.user.value);
-        console.log('props: ', id);
-
         axios.delete(`http://localhost:3333/tests/${id}`)
             .then(res => {
-                // console.log(res);
-                // console.log(res.data);
                 if (res.data) {
                     const user = this.state.user.filter(item => item.id !== res.data.id);
                     this.setState({ user })
                 }
-
             })
-        // event.preventDefault();
-
     }
 
 
@@ -217,6 +194,7 @@ export default class NameForm extends React.Component {
                                 <table className="table table-striped table-bordered">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Name</th>
                                             <th>Description</th>
                                             <th>Control</th>
@@ -227,6 +205,7 @@ export default class NameForm extends React.Component {
                                     <tbody>
                                         {this.state.user.map(user =>
                                             <tr key={user.id}>
+                                                <td>{user.id}</td>
                                                 <td>{user.name}</td>
                                                 <td>{user.description}</td>
                                                 <td><button >sửa</button> -- <button onClick={() => this.onDelete(user.id)}>Xóa</button>
@@ -263,7 +242,7 @@ export default class NameForm extends React.Component {
                             </div>
                             <div className="x_content">
                                 <br />
-                                <form  onSubmit={this.handleSubmit} className="form-horizontal form-label-left">
+                                <form onSubmit={this.handleSubmit} className="form-horizontal form-label-left">
                                     <div className="form-group">
                                         <label className="control-label col-md-3 col-sm-3 col-xs-12" htmlFor="first-name">Name <span className="required">*</span>
                                         </label>
@@ -278,7 +257,7 @@ export default class NameForm extends React.Component {
                                             <input type="text" value={this.state.description} onChange={this.handleChange('description')} required="required" className="form-control col-md-7 col-xs-12" />
                                         </div>
                                     </div>
-                                
+
                                     <div className="ln_solid" />
                                     <div className="form-group">
                                         <div className="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
